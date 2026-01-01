@@ -122,7 +122,7 @@ function App() {
     <div className="App w-screen min-h-screen bg-gray-300 dark:bg-black text-black dark:text-white ">
       <div className="max-w-xl mx-auto p-3 flex flex-col gap-6">
         <header className='text-center py-8'>
-          <p className='text-lg font-black tracking-tight  text-black dark:text-white uppercase'>Text Formatter by Ayeni Joshua</p>
+          <p className='text-lg font-black tracking-tight  text-black dark:text-white uppercase'>Text Formatter by <a href="https://josh-web361.vercel.app" target="_blank">Ayeni Joshua</a></p>
           <p className='text-slate-500 mt-2'>Unicode styles</p>
         </header>
 
