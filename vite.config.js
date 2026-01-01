@@ -11,14 +11,14 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["web361.png", "pwa-512x512.png", "pwa-192x192.png"],
+      includeAssets: [ "pwa-512x512.png", "pwa-192x192.png"],
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,jpg,jpeg,webp}"],
       },
       manifest: {
-        name: "web361-Ayeni Joshua",
-        short_name: "web361-Ayeni Joshua",
-        description: "Ayeni Joshua's Portfolio",
+        name: "Text Formatter by Ayeni Joshua-web361",
+        short_name: "Text Formatter by Ayeni Joshua-web361",
+        description: "Ayeni Joshua's [web361] Text Formatter project",
         theme_color: "#000000",
         icons: [
           {
