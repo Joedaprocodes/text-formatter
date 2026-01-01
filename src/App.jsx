@@ -106,7 +106,9 @@ function App() {
 
       setTimeout(() => {
         el.focus();
-        el.setSelectionRange(start, start + transformed.length);
+        // el.setSelectionRange(start, start + transformed.length);
+        const newCursorPos = start + transformed.length;
+        el.setSelectionRange(newCursorPos, newCursorPos);
       }, 0);
     } else {
       setSelectedStyle(styleKey);
@@ -253,7 +255,7 @@ function App() {
               <ContextMenuSeparator />
               <ContextMenuSubTrigger inset>Font Size</ContextMenuSubTrigger>
               <ContextMenuSubContent className="w-56">
-                
+
                 {Object.keys(textSizes).map((s) => (
                   <ContextMenuCheckboxItem
                     inset
@@ -263,7 +265,7 @@ function App() {
                       setFontSize(textSizes[s])}
                     className="text-xs"
                   >
-{s.toUpperCase()}
+                    {s.toUpperCase()}
                   </ContextMenuCheckboxItem>
                 ))}
               </ContextMenuSubContent>
