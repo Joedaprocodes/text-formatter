@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button"
 import { ButtonGroup } from "@/components/ui/button-group"
 import './App.css'
 import { useState, useRef, useEffect } from 'react'
-import { Copy, CopyCheck } from "lucide-react";
+import { Copy, CopyCheck, UserCircle } from "lucide-react";
 
 function App() {
   const [text, setText] = useState('');
@@ -111,11 +111,54 @@ function App() {
     }
   };
 
-  const copyToClipboard = () => {
+  const copyFinalToClipboard = () => {
     const output = convertToUnicodeStyle(text, selectedStyle);
     setCopied(true);
     setTimeout(() => setCopied(false), 5000);
     navigator.clipboard.writeText(output);
+  }
+
+  const pasteFromClipboard = async () => {
+    try {
+      // 1. Get text from clipboard
+      const clipboardText = await navigator.clipboard.readText();
+      const el = textareaRef.current;
+      if (!el) return;
+
+      // 2. Get cursor/selection positions
+      const start = el.selectionStart;
+      const end = el.selectionEnd;
+
+      // 3. Splice the clipboard text into the existing state
+      const prefix = text.substring(0, start);
+      const suffix = text.substring(end);
+      const newText = prefix + clipboardText + suffix;
+
+      setText(newText);
+
+      // 4. Return focus and move cursor to the end of the pasted content
+      setTimeout(() => {
+        el.focus();
+        const newCursorPos = start + clipboardText.length;
+        el.setSelectionRange(newCursorPos, newCursorPos);
+      }, 0);
+
+      console.log("Text pasted successfully!");
+    } catch (err) {
+      console.error("Failed to read clipboard contents: ", err);
+      // Note: This will fail if the user denies the browser's permission prompt
+    }
+  };
+
+  function copyToClipboard() {
+    const el = textareaRef.current;
+    if (!el) return;
+
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const selection = text.substring(start, end);
+
+    navigator.clipboard.writeText(selection);
   }
 
   return (
@@ -140,7 +183,7 @@ function App() {
                   >Light Mode</Label>
                 </div>
                 <ButtonGroup>
-                  <Button variant="outline" onClick={() => copyToClipboard()}
+                  <Button variant="outline" onClick={() => copyFinalToClipboard()}
                     className="cursor-pointer"
                   >
                     {copied ? <CopyCheck className="w-3 -h-3" /> : <Copy className="w-3 -h-3" />}
@@ -160,6 +203,13 @@ function App() {
           </ContextMenuTrigger>
 
           <ContextMenuContent className="w-64">
+            <ContextMenuItem inset key="paste" onSelect={() => copyToClipboard()} >
+              Copy to Clipboard
+            </ContextMenuItem>
+            <ContextMenuItem inset key="paste" onSelect={() => pasteFromClipboard()}>
+              Paste from Clipboard
+            </ContextMenuItem>
+            <ContextMenuSeparator />
             <ContextMenuLabel inset>Quick Styles</ContextMenuLabel>
             {Object.keys(styles).slice(0, 2).map((s) => (
               <ContextMenuItem
@@ -174,7 +224,6 @@ function App() {
                 </ContextMenuShortcut> */}
               </ContextMenuItem>
             ))}
-
             <ContextMenuSub>
               <ContextMenuSeparator />
               <ContextMenuSubTrigger inset>All styles</ContextMenuSubTrigger>
@@ -191,15 +240,17 @@ function App() {
                     {convertToUnicodeStyle(s.replace(/([A-Z])/g, ' $1'), s)}
                   </ContextMenuItem>
                 ))}
-                {/* <ContextMenuSeparator />
-                <ContextMenuItem inset>
-                  Add Custom
-                  <ContextMenuShortcut>
-                    <Plus size={12} />
-                  </ContextMenuShortcut>
-                </ContextMenuItem> */}
               </ContextMenuSubContent>
             </ContextMenuSub>
+            <ContextMenuSeparator />
+                <ContextMenuItem inset
+                onClick={() => window.open("https://josh-web361.vercel.app", "_blank")}
+                >
+                  Visit my Portfolio
+                  <ContextMenuShortcut>
+                    <UserCircle className="w-4 h-4" />
+                  </ContextMenuShortcut>
+                </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>
 
