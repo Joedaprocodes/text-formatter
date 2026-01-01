@@ -20,10 +20,12 @@ import { Button } from "@/components/ui/button"
 import { ButtonGroup } from "@/components/ui/button-group"
 import './App.css'
 import { useState, useRef, useEffect } from 'react'
-import { Copy, CopyCheck, UserCircle } from "lucide-react";
+import { Copy, CopyCheck, Minus, Plus, RefreshCcw, RefreshCw, UserCircle } from "lucide-react";
 
 function App() {
   const [text, setText] = useState('');
+  const textSizes = { sm: 'text-sm', md: 'text-md', lg: 'text-lg', xl: 'text-xl' };
+  const [fontSize, setFontSize] = useState(textSizes['sm']);
   const [selectedStyle, setSelectedStyle] = useState('bold');
   const [copied, setCopied] = useState(false);
   const [isDark, setIsDark] = useState(JSON.parse(localStorage.getItem("dark")))
@@ -183,6 +185,16 @@ function App() {
                   >Light Mode</Label>
                 </div>
                 <ButtonGroup>
+                  {Object.keys(textSizes).map((size) => (
+                    <Button key={size}
+                      variant={fontSize === textSizes[size] ? "default" : "outline"}
+                      onClick={() => setFontSize(textSizes[size])}
+                    >
+                      {size}
+                    </Button>
+                  ))}
+                </ButtonGroup>
+                <ButtonGroup>
                   <Button variant="outline" onClick={() => copyFinalToClipboard()}
                     className="cursor-pointer"
                   >
@@ -191,12 +203,17 @@ function App() {
                 </ButtonGroup>
               </div>
 
-              <Textarea
+              <textarea
                 ref={textareaRef}
-                className='text-black dark:text-white min-h-40 selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black'
+                class={`border-input placeholder:text-muted-foreground focus-visible:border-ring 
+                focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40
+                 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content w-full rounded-md border 
+                 bg-transparent px-3 py-2 shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]
+                  disabled:cursor-not-allowed disabled:opacity-50 text-black dark:text-white min-h-40
+                   selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black ${fontSize}`}
+                // className={`text-black dark:text-white min-h-40 selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black ${fontSize}`}
                 placeholder="Type here, highlight text, and right-click to format selection..."
                 value={text}
-                // value={convertToUnicodeStyle(text, selectedStyle)}
                 onChange={(e) => setText(e.target.value)}
               />
             </div>
@@ -243,14 +260,14 @@ function App() {
               </ContextMenuSubContent>
             </ContextMenuSub>
             <ContextMenuSeparator />
-                <ContextMenuItem inset
-                onClick={() => window.open("https://josh-web361.vercel.app", "_blank")}
-                >
-                  Visit my Portfolio
-                  <ContextMenuShortcut>
-                    <UserCircle className="w-4 h-4" />
-                  </ContextMenuShortcut>
-                </ContextMenuItem>
+            <ContextMenuItem inset
+              onClick={() => window.open("https://josh-web361.vercel.app", "_blank")}
+            >
+              Visit my Portfolio
+              <ContextMenuShortcut>
+                <UserCircle className="w-4 h-4" />
+              </ContextMenuShortcut>
+            </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>
 
