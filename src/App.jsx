@@ -185,16 +185,6 @@ function App() {
                   >Light Mode</Label>
                 </div>
                 <ButtonGroup>
-                  {Object.keys(textSizes).map((size) => (
-                    <Button key={size}
-                      variant={fontSize === textSizes[size] ? "default" : "outline"}
-                      onClick={() => setFontSize(textSizes[size])}
-                    >
-                      {size}
-                    </Button>
-                  ))}
-                </ButtonGroup>
-                <ButtonGroup>
                   <Button variant="outline" onClick={() => copyFinalToClipboard()}
                     className="cursor-pointer"
                   >
@@ -220,7 +210,7 @@ function App() {
           </ContextMenuTrigger>
 
           <ContextMenuContent className="w-64">
-            <ContextMenuItem inset key="paste" onSelect={() => copyToClipboard()} >
+            <ContextMenuItem inset key="copy" onSelect={() => copyToClipboard()} >
               Copy to Clipboard
             </ContextMenuItem>
             <ContextMenuItem inset key="paste" onSelect={() => pasteFromClipboard()}>
@@ -256,6 +246,25 @@ function App() {
                     {/* Preview the name in its own style */}
                     {convertToUnicodeStyle(s.replace(/([A-Z])/g, ' $1'), s)}
                   </ContextMenuItem>
+                ))}
+              </ContextMenuSubContent>
+            </ContextMenuSub>
+            <ContextMenuSub>
+              <ContextMenuSeparator />
+              <ContextMenuSubTrigger inset>Font Size</ContextMenuSubTrigger>
+              <ContextMenuSubContent className="w-56">
+                
+                {Object.keys(textSizes).map((s) => (
+                  <ContextMenuCheckboxItem
+                    inset
+                    key={s}
+                    checked={fontSize == textSizes[s]}
+                    onSelect={() =>
+                      setFontSize(textSizes[s])}
+                    className="text-xs"
+                  >
+{s.toUpperCase()}
+                  </ContextMenuCheckboxItem>
                 ))}
               </ContextMenuSubContent>
             </ContextMenuSub>
